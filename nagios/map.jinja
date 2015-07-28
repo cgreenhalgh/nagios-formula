@@ -56,8 +56,11 @@
 }, merge=salt['pillar.get']('nagios:lookup:nagios')) %}
 
 {% set nrpe = salt['grains.filter_by']({
-    'default': {
+   'default': {
         'plugin_dir': '/usr/lib/nagios/plugins',
+    },
+   'default64': {
+        'plugin_dir': '/usr/lib64/nagios/plugins',
     },
     'Arch': {
         'plugin': 'nagios-nrpe-plugin',
@@ -74,7 +77,7 @@
         'server': 'nrpe',
         'service': 'nrpe',
     },
-}, merge=salt['pillar.get']('nagios:lookup:nrpe')) %}
+}, merge=(salt['pillar.get']('nagios:lookup:nrpe')), base=('default' if salt['grains.get']('osarch') != 'x86_64' else 'default64') ) %}
 
 {% set nsca = salt['grains.filter_by']({
     'Arch': {
