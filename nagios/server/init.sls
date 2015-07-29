@@ -8,6 +8,11 @@ nagios-service:
   service.running:
     - name: {{ nagios.service }}
     - enable: true
+    - require:
+        - pkg: nagios-server-package
+        - file: nagios-server-config
+        - file: nagios-cgi-config
+        - file: nagios-resource-config
 
 nagios-server-config:
   file.managed:
